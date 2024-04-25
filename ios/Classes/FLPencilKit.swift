@@ -60,6 +60,10 @@ class FLPencilKit: NSObject, FlutterPlatformView {
     if #available(iOS 13.0, *) {
       guard let pencilKitView = _view as? PencilKitView else { return }
       switch call.method {
+      case "dispose":
+        pencilKitView.cleanup()
+        methodChannel.setMethodCallHandler(nil)
+        result(nil)
       case "clear":
         pencilKitView.clear()
         result(nil)
@@ -215,6 +219,16 @@ private class PencilKitView: UIView {
   deinit {
     toolPicker?.removeObserver(canvasView)
     toolPicker?.removeObserver(self)
+  }
+
+  func cleanup() {
+    canvasView.delegate = nil
+    canvasView.removeFromSuperview()
+
+    if let toolPicker {
+      toolPicker.removeObserver(self)
+      toolPicker.setVisible(false, forFirstResponder: canvasView)
+    }
   }
 
   func clear() {

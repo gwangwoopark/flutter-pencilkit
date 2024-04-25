@@ -187,6 +187,12 @@ class _PencilKitState extends State<PencilKit> {
   }
 
   @override
+  Future<void> dispose() async {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  @override
   void didUpdateWidget(covariant PencilKit oldWidget) {
     super.didUpdateWidget(oldWidget);
     _controller?._updateWidget(widget);
@@ -285,6 +291,9 @@ class PencilKitController {
       'backgroundColor': widget.backgroundColor?.value,
     });
   }
+
+  /// Dispose
+  Future<void> dispose() => _channel.invokeMethod('dispose');
 
   /// Clear all drawing data
   Future<void> clear() => _channel.invokeMethod('clear');
