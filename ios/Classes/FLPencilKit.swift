@@ -162,6 +162,7 @@ private func createCanvasView(delegate: PKCanvasViewDelegate) -> PKCanvasView {
   v.allowsFingerDrawing = true
   v.backgroundColor = .clear
   v.isOpaque = false
+  v.overrideUserInterfaceStyle = .light
   return v
 }
 
