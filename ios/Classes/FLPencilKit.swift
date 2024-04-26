@@ -171,18 +171,19 @@ private class PencilKitView: UIView {
   private lazy var canvasView: PKCanvasView = createCanvasView(delegate: self)
 
   private var toolPickerForIos14: PKToolPicker? = nil
-  private var toolPicker: PKToolPicker? {
-    if #available(iOS 14.0, *) {
-      if toolPickerForIos14 == nil {
-        toolPickerForIos14 = PKToolPicker()
-      }
-      return toolPickerForIos14!
-    } else {
-      guard let window = UIApplication.shared.windows.first,
-            let toolPicker = PKToolPicker.shared(for: window) else { return nil }
-      return toolPicker
-    }
-  }
+  private var toolPicker: PKToolPicker? = nil
+  // private var toolPicker: PKToolPicker? {
+  //   if #available(iOS 14.0, *) {
+  //     if toolPickerForIos14 == nil {
+  //       toolPickerForIos14 = PKToolPicker()
+  //     }
+  //     return toolPickerForIos14!
+  //   } else {
+  //     guard let window = UIApplication.shared.windows.first,
+  //           let toolPicker = PKToolPicker.shared(for: window) else { return nil }
+  //     return toolPicker
+  //   }
+  // }
 
   private let channel: FlutterMethodChannel
 
