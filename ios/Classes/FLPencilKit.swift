@@ -159,7 +159,7 @@ private func createCanvasView(delegate: PKCanvasViewDelegate) -> PKCanvasView {
   v.drawing = PKDrawing()
   v.delegate = delegate
   v.alwaysBounceVertical = false
-  v.allowsFingerDrawing = true
+  v.allowsFingerDrawing = false
   v.backgroundColor = .clear
   v.isOpaque = false
   v.overrideUserInterfaceStyle = .light
@@ -207,6 +207,24 @@ private class PencilKitView: UIView {
     toolPicker?.addObserver(self)
     toolPicker?.setVisible(true, forFirstResponder: canvasView)
   }
+
+  override func didMoveToSuperview() {
+    super.didMoveToSuperview()
+    if self.superview != nil {
+      if #available(iOS 16.0, *) {
+        self.disableMenuInteractions()
+      }
+    }
+  }
+
+  override func didMoveToWindow() {
+    super.didMoveToWindow()
+    if self.window != nil {
+      if #available(iOS 16.0, *) {
+        self.disableMenuInteractions()
+      }
+    }
+  }
   
   private func layoutCanvasView() {
     addSubview(canvasView)
@@ -232,7 +250,7 @@ private class PencilKitView: UIView {
       toolPicker.setVisible(false, forFirstResponder: canvasView)
     }
   }
-
+  
   func clear() {
     canvasView.drawing = PKDrawing()
   }
@@ -449,3 +467,18 @@ extension UIColor {
     self.init(red: red, green: green, blue: blue, alpha: alpha)
   }
 }
+
+extension UIView {
+    func allSubviewsRecursive() -> [UIView] {
+        return self.subviews.flatMap { [$0] + $0.allSubviewsRecursive() }
+    }
+
+    @available(iOS 16.0, *)
+    func disableMenuInteractions() {
+        let views = [self] + self.allSubviewsRecursive()
+        for view in views {
+            view.interactions.removeAll { $0 is UIEditMenuInteraction }
+        }
+    }
+}
+
